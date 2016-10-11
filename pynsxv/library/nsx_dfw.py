@@ -144,15 +144,11 @@ def dfw_section_delete(client_session, section_id):
     for i, val in enumerate(l3_section_list):
         if dfw_section_id == str(val[1]) and str(val[0]) != 'Default Section Layer3':
             client_session.delete('dfwL3SectionId', uri_parameters={'sectionId': dfw_section_id})
-            #result = [["True", dfw_section_id, str(val[0]), str(val[-1])]]
-            #return result
             code = "True"
             name = str(val[0])
             type = str(val[-1])
             return dfw_section_id, name, type, code
         if dfw_section_id == str(val[1]) and str(val[0]) == 'Default Section Layer3':
-            # result = [["False-Delete Default Section is not allowed", dfw_section_id, "---", "---"]]
-            # return result
             code = "False"
             name = "Default Section Layer3"
             type = "LAYER3"
@@ -161,15 +157,11 @@ def dfw_section_delete(client_session, section_id):
     for i, val in enumerate(l2_section_list):
         if dfw_section_id == str(val[1]) and str(val[0]) != 'Default Section Layer2':
             client_session.delete('dfwL2SectionId', uri_parameters={'sectionId': dfw_section_id})
-            # result = [["True", dfw_section_id, str(val[0]), str(val[-1])]]
-            # return result
             code = "True"
             name = str(val[0])
             type = str(val[-1])
             return dfw_section_id, name, type, code
         if dfw_section_id == str(val[1]) and str(val[0]) == 'Default Section Layer2':
-            # result = [["False-Delete Default Section is not allowed", dfw_section_id, "---", "---"]]
-            # return result
             code = "False"
             name = "Default Section Layer2"
             type = "LAYER2"
@@ -178,22 +170,16 @@ def dfw_section_delete(client_session, section_id):
     for i, val in enumerate(l3r_section_list):
         if dfw_section_id == str(val[1]) and str(val[0]) != 'Default Section':
             client_session.delete('section', uri_parameters={'section': dfw_section_id})
-            # result = [["True", dfw_section_id, str(val[0]), str(val[-1])]]
-            # return result
             code = "True"
             name = str(val[0])
             type = str(val[-1])
             return dfw_section_id, name, type, code
         if dfw_section_id == str(val[1]) and str(val[0]) == 'Default Section':
-            # result = [["False-Delete Default Section is not allowed", dfw_section_id, "---", "---"]]
-            # return result
             code = "False"
             name = "Default Section"
             type = "L3REDIRECT"
             return dfw_section_id, name, type, code
 
-    # result = [["False", dfw_section_id, "---", "---"]]
-    # return result
     code = "False"
     name = str(val[0])
     type = str(val[-1])
@@ -204,19 +190,12 @@ def _dfw_section_delete_print(client_session, **kwargs):
         print ('Mandatory parameters missing: [-sid SECTION ID]')
         return None
     section_id = kwargs['dfw_section_id']
-    # result = dfw_section_delete(client_session, section_id)
     id, name, type, code = dfw_section_delete(client_session, section_id)
 
     if code == "True":
         print 'Section {} with ID {} of type {} has been deleted'.format(name,id,type)
     elif code == "False":
         print 'Section {} with ID {} of type {} has not been deleted'.format(name,id,type)
-
-    # if kwargs['verbose']:
-        # print result
-    # else:
-        # print tabulate(result, headers=["Return Code", "Section ID", "Section Name", "Section Type"], tablefmt="psql")
-
 
 def dfw_rule_delete(client_session, rule_id):
     """
@@ -243,21 +222,16 @@ def dfw_rule_delete(client_session, rule_id):
             etag = str(section_list[0][3])
             client_session.delete('dfwL3Rule', uri_parameters={'ruleId': dfw_rule_id, 'sectionId': dfw_section_id},
                                   additional_headers={'If-match': etag})
-            # result = [["True", dfw_rule_id, str(val[1]), str(val[-2]), str(val[-1])]]
-            # return result
             code = "True"
             id = dfw_rule_id
             name = str(val[1])
             section = str(val[-1])
             return id, name, section, code
         else:
-            # result = [["False-Delete Default Rule is not allowed", dfw_rule_id, "---", "---", "---"]]
-            # return result
             code = "False"
             id = dfw_rule_id
             name = "Default Rule L3"
             section = ""
-            # return id, name, section, code
 
     for i, val in enumerate(l2_rule_list):
         if dfw_rule_id == str(val[0]) and str(val[1]) != 'Default Rule':
@@ -266,21 +240,16 @@ def dfw_rule_delete(client_session, rule_id):
             etag = str(section_list[0][3])
             client_session.delete('dfwL2Rule', uri_parameters={'ruleId': dfw_rule_id, 'sectionId': dfw_section_id},
                                   additional_headers={'If-match': etag})
-            # result = [["True", dfw_rule_id, str(val[1]), str(val[-2]), str(val[-1])]]
-            # return result
             code = "True"
             id = dfw_rule_id
             name = str(val[1])
             section = str(val[-1])
             return id, name, section, code
         else:
-            # result = [["False-Delete Default Rule is not allowed", dfw_rule_id, "---", "---", "---"]]
-            # return result
             code = "False"
             id = dfw_rule_id
             name = "Default Rule L2"
             section = ""
-            # return id, name, section, code
 
     for i, val in enumerate(l3r_rule_list):
         if dfw_rule_id == str(val[0]) and str(val[1]) != 'Default Rule':
@@ -288,50 +257,31 @@ def dfw_rule_delete(client_session, rule_id):
             section_list, dfwL3r_section_details = dfw_section_read(client_session, dfw_section_id)
             etag = str(section_list[0][3])
             client_session.delete('rule', uri_parameters={'ruleID': dfw_rule_id, 'section': dfw_section_id})
-            # result = [["True", dfw_rule_id, str(val[1]), str(val[-2]), str(val[-1])]]
-            # return result
             code = "True"
             id = dfw_rule_id
             name = str(val[1])
             section = str(val[-1])
             return id, name, section, code
         else:
-            # result = [["False-Delete Default Rule is not allowed", dfw_rule_id, "---", "---", "---"]]
-            # return result
             code = "False"
             id = dfw_rule_id
             name = "Default Rule L3REDIRECT"
             section = ""
             return id, name, section, code
 
-    # result = [["False", dfw_rule_id, "---", "---", "---"]]
-    # return result
-    # code = "False"
-    # id = dfw_rule_id
-    # name = ""
-    # section = ""
     return id, name, section, code
-
 
 def _dfw_rule_delete_print(client_session, **kwargs):
     if not (kwargs['dfw_rule_id']):
         print ('Mandatory parameters missing: [-rid RULE ID]')
         return None
     rule_id = kwargs['dfw_rule_id']
-    # result = dfw_rule_delete(client_session, rule_id)
     id, name, section, code = dfw_rule_delete(client_session, rule_id)
 
     if code == "True":
         print 'Rule {} with ID {} applied to section with id {} has been deleted'.format(name,id,section)
     elif code == "False":
         print 'Rule {} with ID {} has not been deleted'.format(name,id)
-
-    # if kwargs['verbose']:
-        # print result
-    # else:
-        # print tabulate(result, headers=["Return Code", "Rule ID", "Rule Name", "Applied-To", "Section ID"],
-                       # tablefmt="psql")
-
 
 def dfw_section_id_read(client_session, dfw_section_name):
     """
@@ -784,14 +734,7 @@ def _dfw_rule_destination_delete_print(client_session, **kwargs):
         print tabulate(rule, headers=["ID", "Name", "Source", "Destination", "Service", "Action", "Direction",
                                       "Packet Type", "Applied-To", "ID (Section)"], tablefmt="psql")
 
-#def dfw_rule_create(client_session, vccontent, section_id, rule_name, rule_direction, rule_pktype, rule_disabled,
-                    #rule_action, rule_applyto, rule_source_type, rule_source_name, rule_source_value,
-                    #rule_source_excluded, rule_destination_type, rule_destination_name, rule_destination_value,
-                    #rule_destination_excluded, rule_service_protocolname, rule_service_destport,
-                    #rule_service_srcport, rule_service_name, rule_note, rule_tag, rule_logged):
-
-
-def dfw_rule_create(client_session, section_id, rule_name, rule_source_value, rule_destination_value, rule_direction,
+def dfw_rule_create(client_session, section_name, rule_name, rule_source_value, rule_destination_value, rule_direction,
                     rule_pktype, vccontent, rule_applyto='dfw', rule_applyto_name='dfw',
                     rule_applyto_type='dfw', rule_disabled='false', rule_action='allow',
                     rule_source_type='Ipv4Address', rule_destination_type='Ipv4Address', rule_source_excluded='false',
@@ -823,9 +766,6 @@ def dfw_rule_create(client_session, section_id, rule_name, rule_source_value, ru
     if not rule_tag:
         rule_tag = ''
 
-    # if not vccontent:
-        # vccontent = ''
-
     # TODO: complete the description
 
     API_TYPES = {'dc': 'Datacenter', 'ipset': 'IPSet', 'macset': 'MACSet', 'ls': 'VirtualWire',
@@ -842,16 +782,26 @@ def dfw_rule_create(client_session, section_id, rule_name, rule_source_value, ru
     section_list = dfw_section_list(client_session)
     sections = [section_list[0], section_list[1], section_list[2]]
 
+    code = 'False'
+    id = -1
+
     rule_type_selector = ''
+    section_id = ''
+    name = str(section_name)
     for scan in sections:
         for val in scan:
-            if val[1] == section_id:
+            if val[0] == name:
+                section_id = val[1]
                 rule_type_selector = val[2]
+    if section_id == '':
+        print 'Error: cannot find the id of a section matching the name specified. Aborting. No action have been ' \
+              'performed on the system'
+        return id, name, code
 
     if rule_type_selector == '':
         print 'Error: cannot find a section matching the section-id specified. Aborting. No action have been performed ' \
               'on the system'
-        return
+        return id, name, code
 
     if rule_type_selector == 'LAYER2' or rule_type_selector == 'LAYER3':
         if rule_type_selector == 'LAYER2':
@@ -859,25 +809,25 @@ def dfw_rule_create(client_session, section_id, rule_name, rule_source_value, ru
                 if val[1] == rule_name:
                     print 'Error: a rule with the same name already exist. Aborting. No action have been performed on' \
                           ' the system'
-                    return
+                    return id, name, code
             rule_type = 'dfwL2Rules'
             section_type = 'dfwL2SectionId'
             if rule_pktype != 'any':
                 print ('For a L2 rule "any" is the only allowed value for parameter -pktype')
-                return None
+                return id, name, code
             if rule_action != 'allow' and rule_action != 'block':
                 print ('For a L2 rule "allow/block" are the only allowed value for parameter -action')
-                return None
+                return id, name, code
             # For L2 rules where the GUI shows "block" the python data structure for the API call needs "deny"
             # At the cli level this must be hidden to avoid confusing the user with too many options for the same action
             if rule_action == 'block':
                 rule_action = 'deny'
             if rule_applyto == 'ANY' or rule_applyto == 'ALL_EDGES':
                 print ('For a L2 rule "any" and "edgegw" are not allowed values for parameter -appto')
-                return None
+                return id, name, code
             if rule_source_type == 'IPSet' or rule_destination_type == 'IPSet':
                 print ('For a L2 rule "IPSET" is not an allowed value neither as source nor as destination')
-                return None
+                return id, name, code
 
         if rule_type_selector == 'LAYER3':
             # For L3 rules where the GUI shows "block" the python data structure for the API call needs "deny"
@@ -888,7 +838,7 @@ def dfw_rule_create(client_session, section_id, rule_name, rule_source_value, ru
                 if val[1] == rule_name:
                     print 'Error: a rule with the same name already exist. Aborting. No action have been performed on' \
                           ' the system'
-                    return
+                    return id, name, code
             rule_type = 'dfwL3Rules'
             section_type = 'dfwL3SectionId'
         # The schema for L2rules is the same as for L3rules
@@ -898,13 +848,13 @@ def dfw_rule_create(client_session, section_id, rule_name, rule_source_value, ru
             if val[1] == rule_name:
                 print 'Error: a rule with the same name already exist. Aborting. No action have been performed on' \
                           ' the system'
-                return
+                return id, name, code
         rule_type = 'rules'
         section_type = 'section'
         rule_schema = client_session.extract_resource_body_example(rule_type, 'create')
         print 'Error: L3 redirect rules are not supported in this version. Aborting. No action have been performed on' \
               ' the system'
-        return
+        return id, name, code
 
     section = client_session.read(section_type, uri_parameters={'sectionId': section_id})
     section_etag = section.items()[-1][1]
@@ -949,7 +899,7 @@ def dfw_rule_create(client_session, section_id, rule_name, rule_source_value, ru
                 rule_applyto = nametovalue(vccontent, client_session, rule_applyto_name, rule_applyto_type)
                 if rule_applyto == '':
                     print 'Matching Object ID not found - Abort - No operations have been performed on the system'
-                    return
+                    return id, name, code
                 rule_schema['rule']['appliedToList']['appliedTo']['value'] = str(rule_applyto)
                 rule_schema['rule']['appliedToList']['appliedTo']['type'] = API_TYPES[rule_applyto_type]
 
@@ -976,7 +926,7 @@ def dfw_rule_create(client_session, section_id, rule_name, rule_source_value, ru
             rule_source_value = nametovalue(vccontent, client_session, rule_source_name, rule_source_type)
             if rule_source_value == '':
                 print 'Matching Source Object ID not found - Abort - No operations have been performed on the system'
-                return
+                return id, name, code
             rule_schema['rule']['sources']['source']['value'] = rule_source_value
             rule_schema['rule']['sources']['source']['type'] = API_TYPES[rule_source_type]
             # Optional values of a source ( if specified )
@@ -989,7 +939,6 @@ def dfw_rule_create(client_session, section_id, rule_name, rule_source_value, ru
         # Mandatory values of a destination ( NB: destination is an optional value )
         elif rule_destination_value != '':
             rule_schema['rule']['destinations']['destination']['value'] = rule_destination_value
-            #rule_schema['rule']['destinations']['destination']['type'] = rule_destination_type
             rule_schema['rule']['destinations']['destination']['type'] = API_TYPES[rule_destination_type]
             # Optional values of a destination ( if specified )
             if rule_destination_excluded != '':
@@ -1037,7 +986,7 @@ def dfw_rule_create(client_session, section_id, rule_name, rule_source_value, ru
                         rule_schema['rule']['services']['service']['value'] = str(servicegroupdict['objectId'])
             if rule_schema['rule']['services']['service']['value'] == '':
                 print ('Invalid service specified')
-                return
+                return id, name, code
 
     try:
         rule = client_session.create(rule_type, uri_parameters={'sectionId': section_id}, request_body_dict=rule_schema,
@@ -1069,15 +1018,13 @@ def dfw_rule_create(client_session, section_id, rule_name, rule_source_value, ru
         id = "NA"
         name = str(rule_name)
         return id, name, code
-    # return
-
 
 def _dfw_rule_create_print(client_session, vccontent, **kwargs):
 
-    if not (kwargs['dfw_section_id']):
-        print ('Mandatory parameters missing: [-sid SECTION ID]')
+    if not (kwargs['dfw_section_name']):
+        print ('Mandatory parameters missing: [-sname SECTION NAME]')
         return None
-    section_id = kwargs['dfw_section_id']
+    section_name = kwargs['dfw_section_name']
 
     if not (kwargs['dfw_rule_name']):
         print ('Mandatory parameters missing: [-rname RULE NAME]')
@@ -1154,7 +1101,7 @@ def _dfw_rule_create_print(client_session, vccontent, **kwargs):
         return None
 
     if not (kwargs['dfw_rule_disabled']):
-        print ('Using default value "false" for rule "disabled" attribute')
+        # print ('Using default value "false" for rule "disabled" attribute')
         rule_disabled = 'false'
     elif (kwargs['dfw_rule_disabled']) == 'false' or (kwargs['dfw_rule_disabled']) == 'true':
         rule_disabled = kwargs['dfw_rule_disabled']
@@ -1163,7 +1110,7 @@ def _dfw_rule_create_print(client_session, vccontent, **kwargs):
         return None
 
     if not (kwargs['dfw_rule_action']):
-        print ('Using default value "allow" for rule "action" attribute')
+        # print ('Using default value "allow" for rule "action" attribute')
         rule_action = 'allow'
     elif (kwargs['dfw_rule_action']) == 'allow' or (kwargs['dfw_rule_action']) == 'block' \
             or (kwargs['dfw_rule_action']) == 'reject':
@@ -1174,7 +1121,7 @@ def _dfw_rule_create_print(client_session, vccontent, **kwargs):
         return None
 
     if not (kwargs['dfw_rule_source_type']):
-        print ('Using default value "Ipv4Address" for rule source "type" attribute')
+        # print ('Using default value "Ipv4Address" for rule source "type" attribute')
         rule_source_type = 'Ipv4Address'
     else:
         rule_source_type = kwargs['dfw_rule_source_type']
@@ -1194,7 +1141,7 @@ def _dfw_rule_create_print(client_session, vccontent, **kwargs):
         return
 
     if not (kwargs['dfw_rule_source_excluded']):
-        print ('Using default value "false" for rule source "excluded" attribute')
+        # print ('Using default value "false" for rule source "excluded" attribute')
         rule_source_excluded = 'false'
     elif (kwargs['dfw_rule_source_excluded']) != 'true' or (kwargs['dfw_rule_source_excluded']) != 'false':
         print ('Allowed values for rule source excluded parameter are "true" and "false"')
@@ -1203,7 +1150,7 @@ def _dfw_rule_create_print(client_session, vccontent, **kwargs):
         rule_source_excluded = kwargs['dfw_rule_source_excluded']
 
     if not (kwargs['dfw_rule_destination_type']):
-        print ('Using default value "Ipv4Address" for rule destination "type" attribute')
+        # print ('Using default value "Ipv4Address" for rule destination "type" attribute')
         rule_destination_type = 'Ipv4Address'
     else:
         rule_destination_type = kwargs['dfw_rule_destination_type']
@@ -1223,7 +1170,7 @@ def _dfw_rule_create_print(client_session, vccontent, **kwargs):
         return
 
     if not (kwargs['dfw_rule_destination_excluded']):
-        print ('Using default value "false" for rule destination "excluded" attribute')
+        # print ('Using default value "false" for rule destination "excluded" attribute')
         rule_destination_excluded = 'false'
     elif (kwargs['dfw_rule_destination_excluded']) != 'true' and (kwargs['dfw_rule_destination_excluded']) != 'false':
         print ('Allowed values for rule destination excluded parameter are "true" and "false"')
@@ -1275,7 +1222,7 @@ def _dfw_rule_create_print(client_session, vccontent, **kwargs):
         rule_note = kwargs['dfw_rule_note']
 
     if not (kwargs['dfw_rule_logged']):
-        print ('Using default value "false" for rule "logging" attribute')
+        # print ('Using default value "false" for rule "logging" attribute')
         rule_logged = 'false'
     else:
         if kwargs['dfw_rule_logged'] == 'true' or kwargs['dfw_rule_logged'] == 'false':
@@ -1284,13 +1231,7 @@ def _dfw_rule_create_print(client_session, vccontent, **kwargs):
             print ('Allowed values for rule logging are "true" and "false"')
             return
 
-    #rule = dfw_rule_create(client_session, vccontent, section_id, rule_name, rule_direction, rule_pktype, rule_disabled,
-                           #rule_action, rule_applyto, rule_source_type, rule_source_name, rule_source_value,
-                           #rule_source_excluded, rule_destination_type, rule_destination_name, rule_destination_value,
-                           #rule_destination_excluded, rule_service_protocolname, rule_service_destport,
-                           #rule_service_srcport, rule_service_name, rule_note, rule_tag, rule_logged)
-
-    id, name, code = dfw_rule_create(client_session, section_id, rule_name, rule_source_value, rule_destination_value,
+    id, name, code = dfw_rule_create(client_session, section_name, rule_name, rule_source_value, rule_destination_value,
                                      rule_direction, rule_pktype, vccontent, rule_applyto, rule_applyto_name,
                                      rule_applyto_type,
                                      rule_disabled, rule_action, rule_source_type,
@@ -1305,21 +1246,6 @@ def _dfw_rule_create_print(client_session, vccontent, **kwargs):
     elif code == "False":
         print("")
         print 'DFW rule {} has been not been created'.format(name)
-
-    # if kwargs['verbose']:
-        # print rule
-    # else:
-
-        # l2_rule_list, l3_rule_list, l3r_rule_list = dfw_rule_list(client_session)
-
-        # print ''
-        # print '*** ETHERNET RULES ***'
-        # print tabulate(l2_rule_list, headers=["ID", "Name", "Source", "Destination", "Service", "Action", "Direction",
-                                              # "Packet Type", "Applied-To", "ID (Section)"], tablefmt="psql")
-        # print ''
-        # print '*** LAYER 3 RULES ***'
-        # print tabulate(l3_rule_list, headers=["ID", "Name", "Source", "Destination", "Service", "Action", "Direction",
-                                              # "Packet Type", "Applied-To", "ID (Section)"], tablefmt="psql")
 
 def dfw_rule_service_delete(client_session, rule_id, service):
     """
@@ -1626,8 +1552,6 @@ def dfw_section_create(client_session, dfw_section_name, dfw_section_type):
         section = client_session.create(dfw_section_type, request_body_dict=section_schema)
         return section['body']['section']['@id'], section['location'], section['Etag'], \
             section['body']['section']['@name']
-        #l2_section_list, l3r_section_list, l3_section_list, detailed_dfw_sections = dfw_section_list(client_session)
-        #return l2_section_list, detailed_dfw_sections
 
     if dfw_section_type == 'dfwL3Section':
         for val in l3_section_list:
@@ -1635,8 +1559,6 @@ def dfw_section_create(client_session, dfw_section_name, dfw_section_type):
                 # Section with the same name already exist
                 return l3_section_list, detailed_dfw_sections
         section = client_session.create(dfw_section_type, request_body_dict=section_schema)
-        # l2_section_list, l3r_section_list, l3_section_list, detailed_dfw_sections = dfw_section_list(client_session)
-        # return l3_section_list, detailed_dfw_sections
         return section['body']['section']['@id'], section['location'], section['Etag'], \
             section['body']['section']['@name']
 
@@ -1648,8 +1570,6 @@ def dfw_section_create(client_session, dfw_section_name, dfw_section_type):
         section = client_session.create(dfw_section_type, request_body_dict=section_schema)
         return section['body']['section']['@id'], section['location'], section['Etag'], \
             section['body']['section']['@name']
-        #l2_section_list, l3r_section_list, l3_section_list, detailed_dfw_sections = dfw_section_list(client_session)
-        #return l3r_section_list, detailed_dfw_sections
 
 
 def _dfw_section_create_print(client_session, **kwargs):
@@ -1668,19 +1588,12 @@ def _dfw_section_create_print(client_session, **kwargs):
     dfw_section_name = kwargs['dfw_section_name']
     dfw_section_type = kwargs['dfw_section_type']
 
-    # section_list, detailed_dfw_sections = dfw_section_create(client_session, dfw_section_name, dfw_section_type)
     id, location, Etag, name = dfw_section_create(client_session, dfw_section_name, dfw_section_type)
 
     if kwargs['verbose']:
         print 'Section {} created with ID {} Etag {} and location {}'.format(name, id, Etag, location)
     else:
         print 'Section {} created with ID {}'.format(name, id)
-
-    #if kwargs['verbose']:
-        #print detailed_dfw_sections
-    #else:
-        #print tabulate(section_list, headers=["Name", "ID", "Type"], tablefmt="psql")
-
 
 def contruct_parser(subparsers):
     parser = subparsers.add_parser('dfw', description="Functions for distributed firewall",
